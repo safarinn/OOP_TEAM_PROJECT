@@ -22,26 +22,27 @@ import java.util.List;
 public class MessageService {
 
     private List<Employee> subscribers;
+    private List<Message> history;
 
     public MessageService() {
-        // TODO [Артем]: инициализировать пустой список subscribers
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать конструктор MessageService");
+        this.subscribers = new ArrayList<>();
+        this.history = new ArrayList<>();
     }
-
     public void send(Message m) {
-        // TODO [Артем]: доставить m получателю; если получатель subscribed — уведомить
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать send()");
+        history.add(m);
+        if (subscribers.contains(m.getTo())) {
+            System.out.println("[MessageService] " + m);
+        }
     }
 
     public void subscribe(Employee e) {
-        // TODO [Артем]: добавить e в subscribers
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать subscribe()");
+        subscribers.add(e);
     }
 
     public void unsubscribe(Employee e) {
-        // TODO [Артем]: удалить e из subscribers
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать unsubscribe()");
+        subscribers.remove(e);
     }
 
     public List<Employee> getSubscribers() { return subscribers; }
+    public List<Message> getHistory { return history; }
 }
