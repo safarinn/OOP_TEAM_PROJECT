@@ -21,8 +21,9 @@ public class Log {
     private Date timestamp;
 
     public Log(User user, String action) {
-        // TODO [Артем]: инициализировать user, action; timestamp = new Date()
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать конструктор Log");
+        this.user = user;
+        this.action = action;
+        this.timestamp = new Date();
     }
 
     public User getUser()       { return user; }
@@ -31,7 +32,6 @@ public class Log {
 
     @Override
     public String toString() {
-        // TODO [Артем]: вернуть "[timestamp] user.getName() → action"
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать toString()");
+        return "[" + timestamp + "] " + user.getName() + " → " + action;
     }
 }

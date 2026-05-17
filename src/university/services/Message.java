@@ -23,8 +23,11 @@ public class Message {
     private Date date;
 
     public Message(Employee from, Employee to, String subject, String body) {
-        // TODO [Артем]: инициализировать from, to, subject, body; date = new Date()
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать конструктор Message");
+        this.from = from;
+        this.to = to;
+        this.subject = subject;
+        this.body = body;
+        this.date = new Date();
     }
 
     public Employee getFrom()   { return from; }
@@ -35,7 +38,6 @@ public class Message {
 
     @Override
     public String toString() {
-        // TODO [Артем]: вернуть читаемое представление сообщения
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать toString()");
+        return "From: " + from.getName() + " → To: " + to.getName() + " | Subject: " + subject;
     }
 }

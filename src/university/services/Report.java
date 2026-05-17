@@ -19,13 +19,15 @@ public class Report {
     private Date generatedAt;
 
     public Report(String name) {
-        // TODO [Артем]: инициализировать name
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать конструктор Report");
+        this.name = name;
+        this.generatedAt = null;
     }
 
     public void generate() {
-        // TODO [Артем]: установить generatedAt = new Date(), вывести/сформировать отчёт
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать generate()");
+        this.generatedAt = new Date();
+        System.out.println("=== Report: " + name + " ===");
+        System.out.println("Generated at: " + generatedAt);
+        System.out.println("================================");
     }
 
     public String getName()        { return name; }
