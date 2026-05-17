@@ -36,7 +36,7 @@ public class DataManager {
     }
 
     public Object load() {
-        // TODO [Артем]: прочитать объект из файла через ObjectInputStream / FileInputStream
+        System.out.println("Загрузка данных из файла: " + file);
         throw new UnsupportedOperationException("TODO [Артем]: реализовать load()");
     }
 
