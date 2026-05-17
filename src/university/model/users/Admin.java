@@ -1,45 +1,39 @@
 package university.model.users;
 
 import university.enums.UserRole;
+import university.services.AuthenticationService;
 import university.services.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * ============================================================
- * TODO [Рамазан]: Реализовать класс Admin
- * ============================================================
- * Что нужно сделать:
- *  1. Реализовать addUser(u) — добавить пользователя в систему
- *  2. Реализовать removeUser(id) — удалить пользователя по id
- *  3. Реализовать updateUser(u) — обновить данные пользователя
- *  4. Реализовать viewLogs() — вернуть список всех логов системы
- * ============================================================
- */
 public class Admin extends User {
 
-    public Admin(String id, String login, String password, String name, String email) {
+    private AuthenticationService authService;
+    private List<Log> logs = new ArrayList<>();
+
+    public Admin(String id, String login, String password, String name, String email,
+                 AuthenticationService authService) {
         super(id, login, password, name, email, UserRole.ADMIN);
-        // TODO [Рамазан]: дополнительная инициализация если нужна
+        this.authService = authService;
     }
 
     public void addUser(User u) {
-        // TODO [Рамазан]: добавить пользователя в DataManager / хранилище
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать addUser()");
+        authService.registerUser(u);
+        logs.add(new Log(this, "Added user: " + u.getLogin()));
     }
 
     public void removeUser(String id) {
-        // TODO [Рамазан]: удалить пользователя по id из хранилища
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать removeUser()");
+        authService.removeUser(id);
+        logs.add(new Log(this, "Removed user with id: " + id));
     }
 
     public void updateUser(User u) {
-        // TODO [Рамазан]: обновить существующего пользователя в хранилище
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать updateUser()");
+        authService.updateUser(u);
+        logs.add(new Log(this, "Updated user: " + u.getLogin()));
     }
 
     public List<Log> viewLogs() {
-        // TODO [Рамазан]: вернуть список логов из DataManager / Log-хранилища
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать viewLogs()");
+        return logs;
     }
 }

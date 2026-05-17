@@ -2,58 +2,55 @@ package university.model.users;
 
 import university.enums.ManagerType;
 import university.enums.UserRole;
+import university.exceptions.CreditLimitException;
 import university.model.academic.Course;
 import university.model.academic.News;
 import university.services.Report;
 
-/**
- * ============================================================
- * TODO [Рамазан]: Реализовать класс Manager
- * ============================================================
- * Что нужно сделать:
- *  1. approveRegistration(s, c) — подтвердить запись студента на курс
- *  2. addCourse(c) — добавить новый курс в систему
- *  3. assignTeacher(c, t) — назначить преподавателя на курс
- *  4. generateReports() — сформировать отчёты (Report)
- *  5. manageNews(n) — опубликовать / изменить новость
- * ============================================================
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class Manager extends User {
 
     private ManagerType type;
+    private List<Course> courses = new ArrayList<>();
+    private List<News> newsList = new ArrayList<>();
 
     public Manager(String id, String login, String password, String name, String email, ManagerType type) {
         super(id, login, password, name, email, UserRole.MANAGER);
-        // TODO [Рамазан]: инициализировать type
+        this.type = type;
     }
 
     public ManagerType getType() {
-        // TODO [Рамазан]: вернуть type
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать getType()");
+        return type;
     }
 
     public void approveRegistration(Student s, Course c) {
-        // TODO [Рамазан]: подтвердить регистрацию студента s на курс c
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать approveRegistration()");
+        try {
+            s.registerCourse(c);
+        } catch (CreditLimitException e) {
+            System.out.println("Registration denied: " + e.getMessage());
+        }
     }
 
     public void addCourse(Course c) {
-        // TODO [Рамазан]: добавить курс c в систему
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать addCourse()");
+        courses.add(c);
     }
 
     public void assignTeacher(Course c, Teacher t) {
-        // TODO [Рамазан]: назначить преподавателя t на курс c
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать assignTeacher()");
+        c.addInstructor(t);
+        t.addCourse(c);
     }
 
     public void generateReports() {
-        // TODO [Рамазан]: создать и вывести отчёт Report
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать generateReports()");
+        Report report = new Report("Manager Report");
+        report.generate();
     }
 
     public void manageNews(News n) {
-        // TODO [Рамазан]: добавить или обновить новость n
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать manageNews()");
+        newsList.add(n);
     }
+
+    public List<Course> getCourses()  { return courses; }
+    public List<News> getNewsList()   { return newsList; }
 }

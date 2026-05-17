@@ -2,25 +2,13 @@ package university.model.users;
 
 import university.enums.UserRole;
 import university.exceptions.CreditLimitException;
+import university.exceptions.LowHIndexException;
 import university.exceptions.MaxFailsException;
 import university.model.academic.Course;
+import university.model.academic.TeacherRating;
 import university.model.research.Researcher;
 
-/**
- * ============================================================
- * TODO [Рамазан]: Реализовать класс Student
- * ============================================================
- * Что нужно сделать:
- *  1. registerCourse(c) — записать студента на курс
- *     - проверить: credits + c.getCredits() <= 21, иначе CreditLimitException
- *     - обновить credits после успешной записи
- *  2. rateTeacher(t, score) — добавить оценку преподавателю (TeacherRating)
- *  3. incrementFails() — увеличить fails, при fails > 3 бросить MaxFailsException
- *  4. setSupervisor(r) — назначить научного руководителя
- *     - проверить r.getHIndex() >= 3, иначе LowHIndexException
- *     - 4-курсник обязан иметь supervisor — проверку добавить здесь или в Manager
- * ============================================================
- */
+
 public class Student extends User {
 
     private int year;
@@ -33,27 +21,31 @@ public class Student extends User {
     public Student(String id, String login, String password, String name, String email,
                    int year, String major) {
         super(id, login, password, name, email, UserRole.STUDENT);
-        // TODO [Рамазан]: инициализировать year, major, gpa=0, credits=0, fails=0
+        this.year = year;
+        this.major = major;
+        this.gpa = 0;
+        this.credits = 0;
+        this.fails = 0;
     }
 
     public void registerCourse(Course c) throws CreditLimitException {
-        // TODO [Рамазан]: проверить лимит кредитов и записать на курс
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать registerCourse()");
+        if(c.getCredits() + credits > 21) throw new CreditLimitException(email + " Превысил лиимт кредитов");
+        c.addStudent(this);
+        this.credits += c.getCredits();
     }
 
     public void rateTeacher(Teacher t, int score) {
-        // TODO [Рамазан]: создать TeacherRating и добавить в систему
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать rateTeacher()");
+        t.addRating(new TeacherRating(t, this, score));
     }
 
     public void incrementFails() throws MaxFailsException {
-        // TODO [Рамазан]: увеличить fails; если > 3 — бросить MaxFailsException
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать incrementFails()");
+        fails += 1;
+        if(fails > 3) throw new MaxFailsException(email + " превысил лимит фейлов");
     }
 
-    public void setSupervisor(Researcher r) {
-        // TODO [Рамазан]: проверить hIndex >= 3 (LowHIndexException), затем сохранить
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать setSupervisor()");
+    public void setSupervisor(Researcher r) throws LowHIndexException {
+        if (r.getHIndex() < 3) throw new LowHIndexException("Supervisor h-index must be >= 3");
+        this.supervisor = r;
     }
 
     public Researcher getSupervisor() {
@@ -67,7 +59,6 @@ public class Student extends User {
     public int getFails()    { return fails; }
 
     public void setGpa(double gpa) {
-        // TODO [Рамазан]: установить gpa
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать setGpa()");
+        this.gpa = gpa;
     }
 }

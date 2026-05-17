@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Employee extends User implements Serializable {
+public class Employee extends User {
 
     protected Date hireDate;
     protected double salary;
