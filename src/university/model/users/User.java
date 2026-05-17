@@ -2,6 +2,8 @@ package university.model.users;
 
 import university.enums.UserRole;
 
+import java.util.Objects;
+
 /**
  * ============================================================
  * TODO [Рамазан]: Реализовать абстрактный класс User
@@ -23,60 +25,62 @@ public abstract class User {
     protected UserRole role;
 
     public User(String id, String login, String password, String name, String email, UserRole role) {
-        // TODO [Рамазан]: инициализировать поля
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать конструктор User");
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.role = role;
     }
 
     public boolean login(String pw) {
-        // TODO [Рамазан]: вернуть true если pw совпадает с this.password
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать login()");
+        return pw.equals(password);
     }
 
     public void logout() {
-        // TODO [Рамазан]: реализовать выход из системы
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать logout()");
+        // сессия управляется в AuthenticationService
     }
 
     public String getId() {
-        // TODO [Рамазан]: вернуть id
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать getId()");
+        return id;
     }
 
     public String getLogin() {
-        // TODO [Рамазан]: вернуть login
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать getLogin()");
+        return login;
     }
 
     public String getName() {
-        // TODO [Рамазан]: вернуть name
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать getName()");
+        return name;
     }
 
     public String getEmail() {
-        // TODO [Рамазан]: вернуть email
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать getEmail()");
+        return email;
     }
 
     public UserRole getRole() {
-        // TODO [Рамазан]: вернуть role
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать getRole()");
+        return role;
     }
 
     @Override
     public boolean equals(Object o) {
-        // TODO [Рамазан]: сравнивать по полю id
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать equals()");
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(login, user.login) && Objects.equals(password, user.password) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && role == user.role;
     }
 
     @Override
     public int hashCode() {
-        // TODO [Рамазан]: хэш по полю id
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать hashCode()");
+        return Objects.hash(id, login, password, name, email, role);
     }
 
     @Override
     public String toString() {
-        // TODO [Рамазан]: вернуть читаемое представление пользователя
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать toString()");
+        return "User{" +
+                "id='" + id + '\'' +
+                ", login='" + login + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                '}';
     }
 }
