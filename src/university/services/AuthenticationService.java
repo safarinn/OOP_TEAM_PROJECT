@@ -31,38 +31,43 @@ public class AuthenticationService {
     private Map<String, User> users;
 
     public AuthenticationService() {
-        // TODO [Артем]: инициализировать users = new HashMap<>(), currentUser = null
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать конструктор AuthenticationService");
+        users = new HashMap<>();
+        currentUser = null;
     }
 
     public User login(String login, String pw) throws AuthenticationException {
-        // TODO [Артем]: найти пользователя по login, проверить пароль, сохранить currentUser
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать login()");
+        User user = users.get(login);
+        if (user == null) {
+            throw new AuthenticationException("User not found: " + login);
+        }
+        if (!user.login(pw)) {
+            throw new AuthenticationException("Wrong password for user: " + login);
+        }
+        currentUser = user;
+        return currentUser;
     }
 
     public void logout() {
-        // TODO [Артем]: вызвать currentUser.logout(), обнулить currentUser
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать logout()");
+        if (currentUser != null) {
+            currentUser.logout();
+            currentUser = null;
+        }
     }
 
     public void registerUser(User u) {
-        // TODO [Артем]: добавить u в users по ключу u.getLogin()
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать registerUser()");
+        users.put(u.getLogin(), u);
     }
 
     public void removeUser(String id) {
-        // TODO [Артем]: удалить пользователя из users по id (users.values().removeIf(u -> u.getId().equals(id)))
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать removeUser()");
+        users.values().removeIf(u -> u.getId().equals(id));
     }
 
     public void updateUser(User u) {
-        // TODO [Артем]: обновить пользователя: users.put(u.getLogin(), u)
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать updateUser()");
+        users.put(u.getLogin(), u);
     }
 
     public Map<String, User> getUsers() {
-        // TODO [Артем]: вернуть users
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать getUsers()");
+        return users;
     }
 
     public User getCurrentUser() { return currentUser; }

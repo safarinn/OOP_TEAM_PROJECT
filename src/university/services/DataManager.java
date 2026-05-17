@@ -35,7 +35,7 @@ public class DataManager {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(o);
         } catch (IOException e) {
-            throw new RuntimeException("Ошибка при сохранении: " + e.getMessage(), e);
+            throw new RuntimeException("Error while saving: " + e.getMessage(), e);
         }
     }
 
@@ -43,7 +43,7 @@ public class DataManager {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("Ошибка при загрузке: " + e.getMessage(), e);
+            throw new RuntimeException("Error while loading: " + e.getMessage(), e);
         }
     }
 
