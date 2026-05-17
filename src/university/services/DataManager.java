@@ -21,23 +21,30 @@ public class DataManager {
     private String file;
 
     private DataManager(String file) {
-        // TODO [Артем]: инициализировать this.file
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать приватный конструктор DataManager");
+        this.file = file;
     }
 
     public static DataManager getInstance() {
-        // TODO [Артем]: если instance == null, создать new DataManager("data.ser"), вернуть instance
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать getInstance()");
+        if(instance == null){
+            instance = new DataManager("data.ser");
+        }
+        return instance;
     }
 
     public void save(Object o) {
-        // TODO [Артем]: записать o в файл через ObjectOutputStream / FileOutputStream
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать save()");
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+            oos.writeObject(o);
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка при сохранении: " + e.getMessage(), e);
+        }
     }
 
     public Object load() {
-        System.out.println("Загрузка данных из файла: " + file);
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать load()");
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            return ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException("Ошибка при загрузке: " + e.getMessage(), e);
+        }
     }
 
     public String getFile() { return file; }
