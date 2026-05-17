@@ -1,57 +1,66 @@
-package university.model.academic;
-
-import university.model.users.Student;
-import university.model.users.Teacher;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * ============================================================
- * TODO [Нур]: Реализовать класс Course
- * ============================================================
- * Что нужно сделать:
- *  1. addInstructor(t) — добавить преподавателя в список instructors
- *  2. addStudent(s) — добавить студента; проверить, что студентов < maxStudents
- *  3. Геттеры: getCode(), getName(), getCredits(), getMaxStudents(),
- *              getInstructors(), getStudents(), getLessons()
- * ============================================================
- */
-public class Course {
+public class Course implements Serializable {
+    private static final long serialVersionUID = 201L;
 
     private String code;
     private String name;
     private int credits;
     private int maxStudents;
-    private List<Teacher> instructors;
-    private List<Student> students;
-    private List<Lesson> lessons;
+    private List<Teacher> instructors = new ArrayList<>();
+    private List<Student> students = new ArrayList<>();
+    private List<Lesson> lessons = new ArrayList<>();
 
     public Course(String code, String name, int credits, int maxStudents) {
-        // TODO [Нур]: инициализировать поля, создать пустые списки
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать конструктор Course");
+        this.code = code;
+        this.name = name;
+        this.credits = credits;
+        this.maxStudents = maxStudents;
     }
 
     public void addInstructor(Teacher t) {
-        // TODO [Нур]: добавить t в instructors
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать addInstructor()");
+        if (t != null && !instructors.contains(t)) {
+            instructors.add(t);
+        }
     }
 
-    public void addStudent(Student s) {
-        // TODO [Нур]: проверить students.size() < maxStudents, затем добавить
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать addStudent()");
+    public void addStudent(Student s) throws Exception {
+        if (s == null) return;
+        if (students.size() >= maxStudents) {
+            throw new Exception("Course is full");
+        }
+        if (!students.contains(s)) {
+            students.add(s);
+        }
     }
 
-    public void addLesson(Lesson l) {
-        // TODO [Нур]: добавить урок в lessons
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать addLesson()");
+    public String getCode() {
+        return code;
     }
 
-    public String getCode()        { return code; }
-    public String getName()        { return name; }
-    public int getCredits()        { return credits; }
-    public int getMaxStudents()    { return maxStudents; }
-    public List<Teacher> getInstructors() { return instructors; }
-    public List<Student> getStudents()    { return students; }
-    public List<Lesson> getLessons()      { return lessons; }
+    public String getName() {
+        return name;
+    }
+
+    public int getCredits() {
+        return credits;
+    }
+
+    public int getMaxStudents() {
+        return maxStudents;
+    }
+
+    public List<Teacher> getInstructors() {
+        return instructors;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public List<Lesson> getLessons() {
+        return lessons;
+    }
 }
