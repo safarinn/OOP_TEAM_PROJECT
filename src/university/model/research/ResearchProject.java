@@ -31,7 +31,7 @@ public class ResearchProject {
     public void addParticipant(Researcher r) throws NotResearcherException {
         
     	if (r == null) {
-    		throw new NotResearcherException();
+    		throw new NotResearcherException("Participant must implement Researcher");
     	}
     	
     	participants.add(r);
