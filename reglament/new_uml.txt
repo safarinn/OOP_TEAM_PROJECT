@@ -1,0 +1,395 @@
+
+======================================================================
+ПОЛНАЯ UML — UNIVERSITY INFORMATION SYSTEM
+======================================================================
+
+ЦВЕТОВЫЕ ГРУППЫ:
+  • Серый    — Roles / User
+  • Сиреневый — Учебная подсистема
+  • Бирюзовый — Исследовательская подсистема
+  • Янтарный — Сервисы и инфраструктура
+  • Розовый  — Bonus подсистема
+  • Красный  — Исключения
+
+======================================================================
+1. БАЗОВЫЕ РОЛИ
+======================================================================
+
+«abstract» class User
+  - id: String
+  - login: String
+  - password: String
+  - name: String
+  - email: String
+  - role: UserRole
+  + login(pw): boolean
+  + logout(): void
+  + equals(o): boolean
+  + hashCode(): int
+
+class Admin extends User
+  + addUser(u: User)
+  + removeUser(id: String)
+  + updateUser(u: User)
+  + viewLogs(): List<Log>
+
+class Manager extends User
+  - type: ManagerType
+  + approveRegistration(s: Student, c: Course)
+  + addCourse(c: Course)
+  + assignTeacher(c: Course, t: Teacher)
+  + generateReports()
+  + manageNews(n: News)
+
+class Employee extends User
+  - hireDate: Date
+  - salary: double
+  + getSalary(): double
+  + sendComplaint(c: Complaint)
+
+class Student extends User
+  - year: int
+  - major: String
+  - gpa: double
+  - credits: int                  (≤ 21)
+  - fails: int                    (≤ 3)
+  - supervisor: Researcher [0..1]
+  + registerCourse(c: Course)
+  + rateTeacher(t: Teacher, score: int)
+
+class Teacher extends Employee
+  - title: TeacherTitle
+  - department: String
+  + viewCourses()
+  + manageCourse(c: Course)
+  + putMark(s: Student, c: Course, m: Mark)
+  + viewStudents(c: Course)
+
+======================================================================
+2. УЧЕБНАЯ ПОДСИСТЕМА
+======================================================================
+
+class Course
+  - code: String
+  - name: String
+  - credits: int
+  - maxStudents: int
+  + addInstructor(t: Teacher)
+  + addStudent(s: Student)
+
+class Lesson
+  - id: String
+  - type: LessonType
+  - topic: String
+  - time: DateTime
+  + getType(): LessonType
+  + getRoom(): Room
+
+class Mark
+  - attestation1: double
+  - attestation2: double
+  - finalExam: double
+  - student: Student
+  - course: Course
+  + getTotal(): double
+
+======================================================================
+3. ИССЛЕДОВАТЕЛЬСКАЯ ПОДСИСТЕМА (Decorator)
+======================================================================
+
+«interface» Researcher
+  + getHIndex(): int
+  + addPaper(p: ResearchPaper)
+  + addProject(p: ResearchProject)
+  + printPapers(c: Comparator<ResearchPaper>)
+  + getPapers(): List<ResearchPaper>
+  + getProjects(): List<ResearchProject>
+
+«abstract» class ResearcherDecorator implements Researcher
+  # user: User
+  # hindex: int
+  # papers: List<ResearchPaper>
+  # projects: List<ResearchProject>
+  + printPapers(c)
+
+class StudentResearcher extends ResearcherDecorator
+  + supervisorTeacher: Teacher
+
+class EmployeeResearcher extends ResearcherDecorator
+  + supervisees: List<Student>
+
+class ResearchPaper implements Comparable<ResearchPaper>
+  - title: String
+  - authors: List<String>
+  - journal: String
+  - pages: String
+  - publishDate: Date
+  - citations: int
+  - doi: String
+  + compareTo(o): int
+
+class ResearchProject
+  - id: String
+  - topic: String
+  - startDate, endDate: Date
+  + addParticipant(r: Researcher)
+       throws NotResearcherException
+  + addPaper(p: ResearchPaper)
+
+«Strategy» Comparator<ResearchPaper>
+  Реализации: ByCitationsComp, ByDateComparator, ByPagesComp
+  + compare(a, b): int
+
+======================================================================
+4. СЕРВИСЫ И ИНФРАСТРУКТУРА
+======================================================================
+
+«Facade» class University
+  - schools: List<School>
+  - researchers: List<Researcher>
+  + topCitedOfSchool(s): Researcher
+  + topCitedOfYear(y): Researcher
+  + printAllPapers(c: Comparator)
+
+«Singleton» class DataManager
+  - instance: DataManager
+  - file: String
+  + getInstance(): DataManager
+  + save(o: Object): void
+  + load(): Object
+
+«Factory» class UserFactory
+  + create(role: UserRole, data): User
+  + createTeacher(...): Teacher
+  + createStudent(...): Student
+  + wrapAsResearcher(u): Researcher
+
+class AuthenticationService
+  - currentUser: User
+  - users: Map<String, User>
+  + login(login, pw): User
+  + logout(): void
+  + registerUser(u: User): void
+  + removeUser(id: String): void
+  + updateUser(u: User): void
+  + getUsers(): Map<String, User>
+
+«Observer» class MessageService
+  - subscribers: List<Employee>
+  + send(m: Message)
+  + subscribe(e: Employee)
+
+class Message
+  - from, to: Employee
+  - subject, body: String
+  - date: Date
+
+class Report
+  - name: String
+  - generatedAt: Date
+  + generate(): void
+
+class School
+  - name: String
+  - members: List<User>
+
+class Log
+  - user: User
+  - action: String
+  - timestamp: Date
+
+class Complaint
+  - from: Employee
+  - text: String
+  - date: Date
+
+class TeacherRating
+  - teacher: Teacher
+  - student: Student
+  - score: int (1..5)
+
+======================================================================
+5. BONUS ПОДСИСТЕМА
+======================================================================
+
+class Schedule              «bonus»
+  - semester: String
+  - lessons: List<Lesson>
+  + generate() throws RoomBookedException
+  + checkConflicts()
+  + forStudent(s: Student): Schedule
+  + forTeacher(t: Teacher): Schedule
+
+class Room                  «bonus»
+  - number: String
+  - type: RoomType
+  - capacity: int
+  + isFree(time: DateTime): boolean
+  + book(lesson: Lesson)
+
+class Attendance            «bonus»  (ассоциативный класс)
+  - student: Student
+  - lesson: Lesson
+  - present: boolean
+  - date: Date
+  + mark(present: boolean)
+
+class News                  «bonus»
+  - title: String
+  - body: String
+  - author: Manager
+  - date: Date
+
+======================================================================
+6. ПЕРЕЧИСЛЕНИЯ
+======================================================================
+
+«enumeration» UserRole
+  ADMIN, MANAGER, TEACHER, EMPLOYEE, STUDENT
+
+«enumeration» TeacherTitle
+  TUTOR, LECTOR, SENIOR_LECTOR, PROFESSOR  ★ always Researcher
+
+«enumeration» ManagerType
+  OR, DEPARTMENT, DEAN, RECTOR
+
+«enumeration» LessonType
+  LECTURE, PRACTICE
+
+«enumeration» RoomType
+  LECTURE_HALL, LAB, CLASSROOM
+
+======================================================================
+7. КАСТОМНЫЕ ИСКЛЮЧЕНИЯ
+======================================================================
+
+LowHIndexException        — supervisor имеет h-index < 3
+NotResearcherException    — не-Researcher пытается войти в ResearchProject
+CreditLimitException      — у студента > 21 кредитов
+MaxFailsException         — студент завалил курс > 3 раз
+AuthenticationException   — ошибка логина / пароля
+RoomBookedException       — аудитория уже занята в это время
+
+======================================================================
+8. ВСЕ КЛЮЧЕВЫЕ СВЯЗИ
+======================================================================
+
+──── 8.1 Наследование (Generalization, ──▷) ────
+
+  Admin              ──▷ User
+  Manager            ──▷ User
+  Employee           ──▷ User
+  Student            ──▷ User
+  Teacher            ──▷ Employee
+  StudentResearcher  ──▷ ResearcherDecorator
+  EmployeeResearcher ──▷ ResearcherDecorator
+
+──── 8.2 Реализация интерфейса (Realization, ┄┄▷) ────
+
+  ResearcherDecorator ┄┄▷ Researcher
+  ResearchPaper       ┄┄▷ Comparable<ResearchPaper>
+  ByCitationsComp     ┄┄▷ Comparator<ResearchPaper>
+  ByDateComparator    ┄┄▷ Comparator<ResearchPaper>
+  ByPagesComp         ┄┄▷ Comparator<ResearchPaper>
+
+──── 8.3 Композиция (◆ — целое не без части) ────
+
+  Course           1 ──◆── 1..* Lesson
+       Уроки существуют только в составе курса.
+
+  ResearchProject  1 ──◆── 0..* ResearchPaper
+       Опубликованные статьи проекта.
+
+  University       1 ──◆── 1..* School
+       Школы — части университета.
+
+──── 8.4 Агрегация (◇ — часть может жить отдельно) ────
+
+  Schedule  0..* ──◇── 0..* Lesson
+       Schedule — представление (выборка) уроков.
+       Lesson принадлежит Course, не Schedule.
+
+  School    1   ──◇── 0..* User
+       members школы.
+
+  University 1  ──◇── 0..* Researcher
+       все исследователи универа (для topCitedOfYear).
+
+──── 8.5 Ассоциации (── обычные связи) ────
+
+  Course           ── Teacher           [1..*]       (instructors)
+  Course           ── Student           [0..*]       (enrolled, ≤ maxStudents)
+  Mark             ── Student [1] + Course [1]       (оценка студента по курсу)
+  Student          ── Researcher [0..1]              (supervisor, 4 курс)
+  ResearchProject  ── Researcher [1..*]              (participants)
+  ResearcherDecorator ── User [1]                    (оборачиваемый)
+  Lesson           ── Room [1]                       (где проходит урок)
+  Attendance       ── Student [1] + Lesson [1]       (ассоциативный класс)
+  TeacherRating    ── Teacher [1] + Student [1]
+  Message          ── Employee [from 1] + Employee [to 1]
+  Complaint        ── Employee [1]                   (автор жалобы)
+  News             ── Manager [1]                    (автор)
+  News             ── User [0..*]                    (опц. таргет-аудитория)
+  Log              ── User [1]
+  AuthenticationService ── User [0..*]
+
+──── 8.6 Зависимости («uses», ┄┄>) ────
+
+  AuthenticationService  ┄┄> User
+  UserFactory            ┄┄> User, Researcher, ResearcherDecorator
+  MessageService         ┄┄> Message, Employee
+  University             ┄┄> Researcher, ResearchPaper, Comparator
+  DataManager            ┄┄> Object  (сериализация)
+  Manager                ┄┄> Report, News
+  Admin                  ┄┄> Log
+  Schedule               ┄┄> Room.isFree(), RoomBookedException
+  ResearcherDecorator    ┄┄> Comparator<ResearchPaper>  (в printPapers)
+  ResearchProject        ┄┄> NotResearcherException
+  Student                ┄┄> CreditLimitException, MaxFailsException
+
+======================================================================
+9. ПАТТЕРНЫ (6 шт.)
+======================================================================
+
+1. Decorator   — Researcher ◁┄┄ ResearcherDecorator
+                              ◁── StudentResearcher
+                              ◁── EmployeeResearcher
+   Любой User может быть обёрнут как Researcher без изменения
+   иерархии пользователей.
+
+2. Singleton   — DataManager
+   Единственный объект для сериализации / загрузки данных.
+
+3. Strategy    — Comparator<ResearchPaper>
+   ByCitationsComp / ByDateComparator / ByPagesComp.
+   PrintPapers(Comparator) сортирует разными способами.
+
+4. Factory     — UserFactory
+   Создаёт правильный подкласс User по UserRole и
+   оборачивает в Researcher через ResearcherDecorator.
+
+5. Observer    — MessageService
+   Рассылка сообщений / уведомлений подписчикам-Employee.
+
+6. Facade      — University
+   Единая точка входа: topCitedOfSchool / topCitedOfYear /
+   printAllPapers.
+
+======================================================================
+10. БИЗНЕС-ОГРАНИЧЕНИЯ (Invariants)
+======================================================================
+
+  • Student.credits ≤ 21              → CreditLimitException
+  • Student.fails ≤ 3                 → MaxFailsException
+  • 4-курсник имеет supervisor (Researcher)
+  • supervisor.getHIndex() ≥ 3        → LowHIndexException
+  • В ResearchProject — только Researcher
+                                      → NotResearcherException
+  • Teacher с title = PROFESSOR — всегда Researcher
+  • Course имеет ≥ 1 Teacher
+  • Course.students.size() ≤ maxStudents
+  • Mark = attestation1 + attestation2 + finalExam
+  • Room занят одним Lesson в одно время
+                                      → RoomBookedException
+  • Lesson.type = LECTURE → Room.type = LECTURE_HALL (для расписания)
+  • Lesson.type = PRACTICE → Room.type ∈ {LAB, CLASSROOM}
