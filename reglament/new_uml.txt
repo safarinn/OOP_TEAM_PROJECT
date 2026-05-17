@@ -339,7 +339,7 @@ RoomBookedException       — аудитория уже занята в это �
   UserFactory            ┄┄> User, Researcher, ResearcherDecorator
   MessageService         ┄┄> Message, Employee
   University             ┄┄> Researcher, ResearchPaper, Comparator
-  DataManager            ┄┄> Object  (сериализация)
+  DataManager            ┄┄> University  (сериализация всей системы)
   Manager                ┄┄> Report, News
   Admin                  ┄┄> Log
   Schedule               ┄┄> Room.isFree(), RoomBookedException
