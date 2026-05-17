@@ -55,7 +55,7 @@ public class Main {
         University university = new University();
         DataManager dm = DataManager.getInstance();
         AuthenticationService auth = new AuthenticationService();
-        UserFactory factory = new UserFactory();
+        UserFactory factory = new UserFactory(university);
 
         // загрузка данных , нужно кастануть к нужному типу, например List<Object> users = (List<Object>) dm.load();
         Object saved = null;

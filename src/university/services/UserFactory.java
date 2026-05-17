@@ -1,6 +1,7 @@
 package university.services;
 
 import university.enums.TeacherTitle;
+import university.enums.ManagerType;
 import university.enums.UserRole;
 import university.model.research.EmployeeResearcher;
 import university.model.research.Researcher;
@@ -30,39 +31,56 @@ import java.util.Date;
  */
 public class UserFactory {
 
+    private University university;
+
+    public UserFactory(University university) {
+        this.university = university;
+    }
+
     public Student createStudent(String id, String login, String password,
-                                 String name, String email, int year, String major) {
-        // TODO [Артем]: вернуть new Student(...)
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать createStudent()");
+                                  String name, String email, int year, String major) {
+        return new Student(id, login, password, name, email, year, major);
     }
 
     public Teacher createTeacher(String id, String login, String password,
-                                 String name, String email, Date hireDate, double salary,
-                                 TeacherTitle title, String department) {
-        // TODO [Артем]: вернуть new Teacher(...); если PROFESSOR — вызвать wrapAsResearcher()
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать createTeacher()");
+                                  String name, String email, Date hireDate, double salary,
+                                  TeacherTitle title, String department) {
+        Teacher teacher = new Teacher(id, login, password, name, email, hireDate, salary, title, department);
+        if (title == TeacherTitle.PROFESSOR) {
+            Researcher researcher = wrapAsResearcher(teacher);
+            university.addResearcher(researcher);
+        }
+        return teacher;
     }
 
-    public Admin createAdmin(String id, String login, String password, String name, String email) {
-        // TODO [Артем]: вернуть new Admin(...)
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать createAdmin()");
+    public Admin createAdmin(String id, String login, String password,
+                              String name, String email, AuthenticationService authService) {
+        return new Admin(id, login, password, name, email, authService);
     }
 
     public Manager createManager(String id, String login, String password,
-                                 String name, String email,
-                                 university.enums.ManagerType type) {
-        // TODO [Артем]: вернуть new Manager(...)
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать createManager()");
+                                  String name, String email, ManagerType type) {
+        return new Manager(id, login, password, name, email, type);
     }
 
     public Researcher wrapAsResearcher(User u) {
-        // TODO [Артем]: Student → StudentResearcher; Employee → EmployeeResearcher; иначе ошибка
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать wrapAsResearcher()");
+        if (u instanceof Student) {
+            return new StudentResearcher(u, null);
+        } else if (u instanceof Employee) {
+            return new EmployeeResearcher(u);
+        } else {
+            throw new IllegalArgumentException("Невозможно обернуть пользователя типа: " + u.getClass().getSimpleName());
+        }
     }
 
     public User create(UserRole role, String id, String login, String password,
                        String name, String email) {
-        // TODO [Артем]: switch(role) → вызвать нужный create*() метод
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать create()");
+        switch (role) {
+            case STUDENT:  return createStudent(id, login, password, name, email, 1, "Undeclared");
+            case TEACHER:  return createTeacher(id, login, password, name, email, new Date(), 0, TeacherTitle.LECTOR, "General");
+            case ADMIN:    return createAdmin(id, login, password, name, email, new AuthenticationService());
+            case MANAGER:  return createManager(id, login, password, name, email, ManagerType.values()[0]);
+            default:       throw new IllegalArgumentException("Неизвестная роль: " + role);
+        }
     }
 }
