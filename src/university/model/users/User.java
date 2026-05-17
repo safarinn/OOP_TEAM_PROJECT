@@ -2,21 +2,11 @@ package university.model.users;
 
 import university.enums.UserRole;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * ============================================================
- * TODO [Рамазан]: Реализовать абстрактный класс User
- * ============================================================
- * Что нужно сделать:
- *  1. Реализовать метод login(pw) — сравнивает pw с this.password
- *  2. Реализовать метод logout() — сбрасывает текущую сессию
- *  3. Переопределить equals() и hashCode() по полю id
- *  4. Реализовать getId(), getLogin(), getName(), getEmail(), getRole()
- * ============================================================
- */
-public abstract class User {
-
+public abstract class User implements Serializable {
+    
     protected String id;
     protected String login;
     protected String password;
