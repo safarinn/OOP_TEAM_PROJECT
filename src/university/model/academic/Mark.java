@@ -1,7 +1,21 @@
-import java.io.Serializable;
+package university.model.academic;
 
-public class Mark implements Serializable {
-    private static final long serialVersionUID = 203L;
+import university.model.users.Student;
+
+/**
+ * ============================================================
+ * TODO [Нур]: Реализовать класс Mark
+ * ============================================================
+ * Что нужно сделать:
+ *  1. Конструктор — инициализировать attestation1, attestation2, finalExam, student, course
+ *  2. getTotal() — вернуть сумму attestation1 + attestation2 + finalExam
+ *  3. Геттеры для всех полей
+ *
+ * Бизнес-правило: Mark = attestation1 + attestation2 + finalExam
+ * Диапазоны: attestation1 и attestation2 от 0 до 30, finalExam от 0 до 40
+ * ============================================================
+ */
+public class Mark {
 
     private double attestation1;
     private double attestation2;
@@ -9,16 +23,15 @@ public class Mark implements Serializable {
     private Student student;
     private Course course;
 
-    public Mark(Student student, Course course) {
-        this.student = student;
-        this.course = course;
+    public Mark(double attestation1, double attestation2, double finalExam,
+                Student student, Course course) {
+        // TODO [Нур]: инициализировать поля
+        throw new UnsupportedOperationException("TODO [Нур]: реализовать конструктор Mark");
     }
 
     public double getTotal() {
-        return attestation1 + attestation2 + finalExam;
-    }
-    public boolean isPassed() {
-        return getTotal() >= 60; // Assuming 60 is the passing grade
+        // TODO [Нур]: вернуть attestation1 + attestation2 + finalExam
+        throw new UnsupportedOperationException("TODO [Нур]: реализовать getTotal()");
     }
 
     public double getAttestation1() { return attestation1; }
