@@ -21,18 +21,17 @@ public class School {
     private List<User> members;
 
     public School(String name) {
-        // TODO [Артем]: инициализировать name и пустой список members
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать конструктор School");
+        this.name = name;
+        this.members = new ArrayList<>();
     }
 
     public void addMember(User u) {
-        // TODO [Артем]: добавить u в members
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать addMember()");
+        members.add(u);
     }
 
     public void removeMember(User u) {
-        // TODO [Артем]: удалить u из members
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать removeMember()");
+        members.remove(u);
+    }
     }
 
     public String getName()       { return name; }

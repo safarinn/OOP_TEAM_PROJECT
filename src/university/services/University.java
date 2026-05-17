@@ -3,8 +3,11 @@ package university.services;
 import university.model.research.ResearchPaper;
 import university.model.research.Researcher;
 
+
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * ============================================================
@@ -30,35 +33,46 @@ public class University {
     private List<Researcher> researchers;
 
     public University() {
-        // TODO [Артем]: инициализировать пустые списки schools и researchers
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать конструктор University");
+        this.school = new ArrayList<>();
+        this.researchers = new ArrayList<>();
     }
 
     public void addSchool(School s) {
-        // TODO [Артем]: добавить s в schools
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать addSchool()");
+        schools.add(s);
     }
 
     public void addResearcher(Researcher r) {
-        // TODO [Артем]: добавить r в researchers
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать addResearcher()");
+        researchers.add(r);
     }
 
     public Researcher topCitedOfSchool(School s) {
-        // TODO [Артем]: среди members школы s найти того, кто реализует Researcher
-        //  и у кого наибольшая суммарная сумма citations по всем статьям
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать topCitedOfSchool()");
+        return s.getMembers().stream()
+            .filter(u -> u instanceof Researcher)
+            .map(u -> (Researcher) u)
+            .max(Comparator.comparingInt(r ->
+                r.getPapers().stream()
+                    .mapToInt(ResearchPaper::getCitations)
+                    .sum()
+            ))
+            .orElse(null);
     }
 
     public Researcher topCitedOfYear(int year) {
-        // TODO [Артем]: среди всех researchers найти того, у кого наибольший hIndex
-        //  и у кого есть хотя бы одна статья, опубликованная в году year
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать topCitedOfYear()");
+        return researchers.stream()
+            .filter(r -> r.getPapers().stream().anyMatch(p -> {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(p.getPublishDate());
+                return cal.get(Calendar.YEAR) == year;
+            }))
+            .max(Comparator.comparingInt(Researcher::getHIndex))
+            .orElse(null);
     }
 
     public void printAllPapers(Comparator<ResearchPaper> comparator) {
-        // TODO [Артем]: собрать все статьи всех researchers, отсортировать, вывести
-        throw new UnsupportedOperationException("TODO [Артем]: реализовать printAllPapers()");
+        researchers.stream()
+            .flatMap(r -> r.getPapers().stream())
+            .sorted(comparator)
+            .forEach(System.out::println);
     }
 
     public List<School> getSchools()           { return schools; }
