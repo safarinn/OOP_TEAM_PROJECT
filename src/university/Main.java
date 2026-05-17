@@ -52,6 +52,19 @@ public class Main {
         // TODO [Артем]: DataManager dm = DataManager.getInstance();
         // TODO [Артем]: AuthenticationService auth = new AuthenticationService();
         // TODO [Артем]: UserFactory factory = new UserFactory();
+        University university = new University();
+        DataManager dm = DataManager.getInstance();
+        AuthenticationService auth = new AuthenticationService();
+        UserFactory factory = new UserFactory();
+
+        // загрузка данных , нужно кастануть к нужному типу, например List<Object> users = (List<Object>) dm.load();
+        Object saved = null;
+        try {
+            saved = dm.load();
+            System.out.println("Data loaded from: " + dm.getFile());
+        } catch (RuntimeException e) {
+            System.out.println("No saved data found, starting fresh.");
+        }
 
         // TODO [Рамазан]: создать тестовых пользователей через factory
         // TODO [Нурали]: создать ResearchPaper и ResearchProject, проверить h-index
