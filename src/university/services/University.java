@@ -33,7 +33,7 @@ public class University {
     private List<Researcher> researchers;
 
     public University() {
-        this.school = new ArrayList<>();
+        this.schools = new ArrayList<>();
         this.researchers = new ArrayList<>();
     }
 

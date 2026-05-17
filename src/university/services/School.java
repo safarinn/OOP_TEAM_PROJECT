@@ -3,6 +3,7 @@ package university.services;
 import university.model.users.User;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * ============================================================
@@ -32,8 +33,6 @@ public class School {
     public void removeMember(User u) {
         members.remove(u);
     }
-    }
-
     public String getName()       { return name; }
     public List<User> getMembers() { return members; }
 }
