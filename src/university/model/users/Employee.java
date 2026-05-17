@@ -3,40 +3,37 @@ package university.model.users;
 import university.enums.UserRole;
 import university.model.academic.Complaint;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-/**
- * ============================================================
- * TODO [Рамазан]: Реализовать класс Employee
- * ============================================================
- * Что нужно сделать:
- *  1. Реализовать getSalary() — вернуть salary
- *  2. Реализовать sendComplaint(c) — отправить жалобу (через MessageService или хранилище)
- * ============================================================
- */
-public class Employee extends User {
+public class Employee extends User implements Serializable {
 
     protected Date hireDate;
     protected double salary;
+    private List<Complaint> complaints = new ArrayList<>();
 
     public Employee(String id, String login, String password, String name, String email,
-                    UserRole role, Date hireDate, double salary) {
+                UserRole role, Date hireDate, double salary) {
         super(id, login, password, name, email, role);
-        // TODO [Рамазан]: инициализировать hireDate и salary
-    }
-
-    public double getSalary() {
-        // TODO [Рамазан]: вернуть salary
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать getSalary()");
+        this.hireDate = hireDate;
+        this.salary = salary;
     }
 
     public Date getHireDate() {
-        // TODO [Рамазан]: вернуть hireDate
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать getHireDate()");
+        return hireDate;
+    }
+
+    public double getSalary() {
+        return salary;
     }
 
     public void sendComplaint(Complaint c) {
-        // TODO [Рамазан]: отправить жалобу c в систему
-        throw new UnsupportedOperationException("TODO [Рамазан]: реализовать sendComplaint()");
+        complaints.add(c);
+    }
+
+    public List<Complaint> getComplaints() {
+        return complaints;
     }
 }
