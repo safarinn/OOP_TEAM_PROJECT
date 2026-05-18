@@ -9,6 +9,8 @@ import java.util.List;
 
 public class EmployeeResearcher extends ResearcherDecorator {
 
+    private static final long serialVersionUID = 305L;
+
     private List<Student> supervisees;
 
     public EmployeeResearcher(User user) {

@@ -2,6 +2,8 @@ package university.services;
 
 import university.model.research.ResearchPaper;
 import university.model.research.Researcher;
+import university.model.research.ResearcherDecorator;
+import university.model.users.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,14 +50,22 @@ public class University implements Serializable {
     }
 
     public Researcher topCitedOfSchool(School s) {
-        return s.getMembers().stream()
-            .filter(u -> u instanceof Researcher)
-            .map(u -> (Researcher) u)
+        return researchers.stream()
+            .filter(r -> r instanceof ResearcherDecorator &&
+                         s.getMembers().contains(((ResearcherDecorator) r).getUser()))
             .max(Comparator.comparingInt(r ->
                 r.getPapers().stream()
                     .mapToInt(ResearchPaper::getCitations)
                     .sum()
             ))
+            .orElse(null);
+    }
+
+    public Researcher findResearcher(User u) {
+        return researchers.stream()
+            .filter(r -> r instanceof ResearcherDecorator &&
+                         ((ResearcherDecorator) r).getUser().equals(u))
+            .findFirst()
             .orElse(null);
     }
 

@@ -6,6 +6,8 @@ import university.model.users.User;
 
 public class StudentResearcher extends ResearcherDecorator {
 
+    private static final long serialVersionUID = 304L;
+
     public Teacher supervisorTeacher;
 
     public StudentResearcher(User user, Teacher supervisorTeacher) {

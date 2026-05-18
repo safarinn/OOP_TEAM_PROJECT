@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public abstract class User implements Serializable {
+
+    private static final long serialVersionUID = 100L;
     
     protected String id;
     protected String login;

@@ -1,10 +1,11 @@
 package university.model.research;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
 
-public interface Researcher {
+public interface Researcher extends Serializable {
 
     int getHIndex();
 

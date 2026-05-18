@@ -27,34 +27,20 @@ public class Course implements Serializable{
     }
 
     public void addInstructor(Teacher t) {
-        if (t != null && !instructors.contains(t)) {
-            instructors.add(t);
-        } else {
-            throw new UnsupportedOperationException("Преподаватель не может быть null или уже добавлен");
-        }
-        
+        if (t == null) throw new IllegalArgumentException("Teacher cannot be null");
+        if (!instructors.contains(t)) instructors.add(t);
     }
 
     public void addStudent(Student s) {
-        if (s == null) return;
-        if (students.size() >= maxStudents) {
-            throw new UnsupportedOperationException("Course is full");
-        }
-        if (!students.contains(s)) {
-            students.add(s);
-        } else {
-            throw new UnsupportedOperationException("Студент уже добавлен");
-        }
-     
+        if (s == null) throw new IllegalArgumentException("Student cannot be null");
+        if (students.size() >= maxStudents) throw new IllegalStateException("Course is full: " + name);
+        if (!students.contains(s)) students.add(s);
     }
 
     public void addLesson(Lesson l) {
-        if (l != null && !lessons.contains(l)) {
-            lessons.add(l);
-        } else {
-            throw new UnsupportedOperationException("Урок не может быть null или уже добавлен");
-        }
-            }
+        if (l == null) throw new IllegalArgumentException("Lesson cannot be null");
+        if (!lessons.contains(l)) lessons.add(l);
+    }
 
    public String getCode() {
         return code;

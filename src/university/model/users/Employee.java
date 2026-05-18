@@ -12,6 +12,8 @@ import java.util.List;
 
 public class Employee extends User {
 
+    private static final long serialVersionUID = 105L;
+
     protected Date hireDate;
     protected double salary;
     private List<Complaint> complaints = new ArrayList<>();
