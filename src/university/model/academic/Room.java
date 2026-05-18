@@ -57,5 +57,11 @@ public class Room implements Serializable {
     public RoomType getType()  { return type; }
     public int getCapacity()   { return capacity; }
     public List<Lesson> getBookedLessons() { return bookedLessons; }
+
+    @Override
+    public String toString() {
+        return String.format("Room{number='%s', type=%s, capacity=%d, booked=%d}",
+                number, type, capacity, bookedLessons.size());
+    }
 }
 

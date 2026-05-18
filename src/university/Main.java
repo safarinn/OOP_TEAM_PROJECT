@@ -128,6 +128,9 @@ public class Main {
         System.out.println("Студентов в CS201: " + oop.getStudents().size());
         System.out.println(oop);
 
+        System.out.println("\nГенерация академического отчёта:");
+        manager.generateReports();
+
         System.out.println("Студенты по имени:");
         manager.viewStudentsSortedByName(Arrays.asList(student1, student2))
                .forEach(s -> System.out.println("  " + s.getName()));
@@ -137,6 +140,7 @@ public class Main {
         // ═══════════════════════════════════════════════════════════
         section("5. Пердебай Рамазан — выставление оценок");
 
+        try { auth.login("r.perdebay", "pass123"); } catch (AuthenticationException e) {}
         Mark m1 = new Mark(28, 27, 38, student1, oop);   // total = 93
         Mark m2 = new Mark(22, 25, 32, student2, oop);   // total = 79
         Mark m3 = new Mark(25, 26, 35, student1, algo);  // total = 86
@@ -152,6 +156,10 @@ public class Main {
         System.out.println(student2.getName() + " → CS201: " + m2.getTotal());
         System.out.println(student1.getName() + " → CS301: " + m3.getTotal());
 
+        System.out.println("Список студентов CS201 (Teacher.viewStudents):");
+        teacher.viewStudents(oop).forEach(s -> System.out.println("  " + s));
+        auth.logout();
+
         System.out.println("Рейтинг студентов по GPA:");
         manager.viewStudentsSortedByGpa(Arrays.asList(student1, student2))
                .forEach(s -> System.out.println("  " + s.getName() + " | GPA=" + s.getGpa()));
@@ -161,6 +169,12 @@ public class Main {
         // ═══════════════════════════════════════════════════════════
         section("6. Муратов Нурали — оценки и транскрипт");
 
+        try { auth.login("n.muratov", "pass123"); } catch (AuthenticationException e) {}
+
+        System.out.println("Зарегистрированные курсы:");
+        student1.getRegisteredCourses().forEach(c -> System.out.println("  " + c));
+
+        System.out.println();
         System.out.println(student1.getTranscript());
 
         System.out.print("Преподаватели CS201: ");
@@ -176,6 +190,8 @@ public class Main {
         teacher.sendComplaint(complaint);
         List<Complaint> complaints = manager.viewComplaints(Arrays.<Employee>asList(teacher));
         System.out.println("Жалоб в регистратуре: " + complaints.size());
+        complaints.forEach(c -> System.out.println("  " + c));
+        auth.logout();
 
         // ═══════════════════════════════════════════════════════════
         // 7. ИССЛЕДОВАТЕЛЬСКАЯ ПОДСИСТЕМА (КБТУ)
@@ -209,6 +225,10 @@ public class Main {
         profResearcher.addPaper(p2);
         profResearcher.addPaper(p3);
 
+        // addCitation — новая цитата на p1
+        p1.addCitation();
+        System.out.println("Цитирований p1 после новой ссылки: " + p1.getCitations());
+
         System.out.println("H-Index " + teacher.getName() + ": " + profResearcher.getHIndex());
 
         System.out.println("\nСтатьи по цитированиям (убывание):");
@@ -234,6 +254,19 @@ public class Main {
         StudentResearcher sRes = new StudentResearcher(student2, teacher);
         sRes.addPaper(p2);
         university.addResearcher(sRes);
+
+        // Standalone Employee → EmployeeResearcher (сотрудник лаборатории, не Teacher)
+        Employee labStaff = new Employee(
+                "E1", "lab.nurali", "pass123",
+                "Нурали Жансерік (lab)", "lab.nurali@kbtu.kz",
+                UserRole.EMPLOYEE, new Date(), 180000);
+        auth.registerUser(labStaff);
+        EmployeeResearcher labRes = new EmployeeResearcher(labStaff);
+        labRes.addPaper(p3);
+        labRes.addSupervisee(student2);
+        university.addResearcher(labRes);
+        System.out.println("EmployeeResearcher: " + labStaff.getName() +
+                ", supervisees=" + labRes.getSupervisees().size());
 
         // ResearchProject КБТУ
         try {
@@ -309,6 +342,30 @@ public class Main {
 
             Schedule forTeacher = schedule.forTeacher(teacher);
             System.out.println(forTeacher);
+
+            // Проверка конфликтов
+            schedule.checkConflicts();
+            System.out.println("Конфликтов в расписании не найдено.");
+
+            // Посещаемость
+            Attendance a1 = new Attendance(student1, lesson1, true);
+            Attendance a2 = new Attendance(student2, lesson1, false);
+            Attendance a3 = new Attendance(student1, lesson2, true);
+
+            System.out.println("\nПосещаемость:");
+            System.out.printf("  %-20s | %-30s | %s%n", "Студент", "Занятие", "Присутствовал");
+            System.out.println("  " + "-".repeat(60));
+            for (Attendance a : new Attendance[]{a1, a2, a3}) {
+                System.out.printf("  %-20s | %-30s | %s%n",
+                        a.getStudent().getName(),
+                        a.getLesson().getTopic(),
+                        a.isPresent() ? "✓" : "✗");
+            }
+
+            // Отметить студента2 присутствующим (опоздал)
+            a2.mark(true);
+            System.out.println("\n  " + student2.getName() + " отмечен после опоздания: " +
+                    (a2.isPresent() ? "✓" : "✗"));
 
         } catch (RoomBookedException e) {
             System.out.println("Конфликт расписания: " + e.getMessage());

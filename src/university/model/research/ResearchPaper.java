@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ResearchPaper implements Comparable<ResearchPaper>, Serializable {
@@ -28,6 +29,19 @@ public class ResearchPaper implements Comparable<ResearchPaper>, Serializable {
     	this.citations = citations;
     	this.doi = doi;
     	
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ResearchPaper that = (ResearchPaper) o;
+        return Objects.equals(doi, that.doi);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(doi);
     }
 
     @Override

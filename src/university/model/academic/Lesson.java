@@ -32,12 +32,16 @@ public class Lesson implements Serializable {
         this.time = time;
     }
 
-    public LessonType getType() {
-        return type;
-    }
+    public LessonType getType() { return type; }
+    public String getId()       { return id; }
+    public String getTopic()    { return topic; }
+    public Room getRoom()       { return room; }
+    public Date getTime()       { return time; }
 
-    public String getId()   { return id; }
-    public String getTopic() { return topic; }
-    public Room getRoom()   { return room; }
-    public Date getTime()   { return time; }
+    @Override
+    public String toString() {
+        String room = this.room != null ? this.room.getNumber() : "-";
+        return String.format("Lesson{id='%s', type=%s, topic='%s', room=%s}",
+                id, type, topic, room);
+    }
 }

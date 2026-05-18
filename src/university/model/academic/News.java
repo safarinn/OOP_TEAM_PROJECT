@@ -34,10 +34,11 @@ public class News implements Serializable {
     public String getBody()        { return body; }
     public Manager getAuthor()     { return author; }
     public Date getDate()          { return date; }
-    public void setTitle(String t) {
-        this.title = t;
-    }
-    public void setBody(String b)  {
-        this.body = b;
+    public void setTitle(String t) { this.title = t; }
+    public void setBody(String b)  { this.body = b; }
+
+    @Override
+    public String toString() {
+        return String.format("News{title='%s', author='%s'}", title, author.getName());
     }
 }

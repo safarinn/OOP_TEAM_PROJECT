@@ -49,4 +49,10 @@ public class ResearchProject implements Serializable {
     public Date getEndDate()                    { return endDate; }
     public List<Researcher> getParticipants()   { return participants; }
     public List<ResearchPaper> getPapers()      { return papers; }
+
+    @Override
+    public String toString() {
+        return String.format("ResearchProject{id='%s', topic='%s', participants=%d, papers=%d}",
+                id, topic, participants.size(), papers.size());
+    }
 }

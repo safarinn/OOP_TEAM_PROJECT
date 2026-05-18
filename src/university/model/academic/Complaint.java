@@ -32,4 +32,9 @@ public class Complaint implements Serializable {
     public Employee getFrom() { return from; }
     public String getText()   { return text; }
     public Date getDate()     { return date; }
+
+    @Override
+    public String toString() {
+        return String.format("Complaint{from='%s', text='%s'}", from.getName(), text);
+    }
 }
