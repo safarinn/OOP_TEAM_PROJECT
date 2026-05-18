@@ -1,5 +1,6 @@
 package university.model.research;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -45,10 +46,12 @@ public class ResearchPaper implements Comparable<ResearchPaper> {
 
     @Override
     public String toString() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(publishDate);
         return title + ". "
         		+ String.join(", ", authors) + ". "
         		+ journal + ", "
-        		+ publishDate.getYear() + ". "
+        		+ cal.get(Calendar.YEAR) + ". "
         		+ doi + ".";
     }
 }

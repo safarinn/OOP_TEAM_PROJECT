@@ -32,6 +32,10 @@ public class Teacher extends Employee {
         return courses;
     }
 
+    public List<Course> getAssignedCourses() {
+        return courses;
+    }
+
     public void manageCourse(Course c) {
         if (!courses.contains(c)) courses.add(c);
     }

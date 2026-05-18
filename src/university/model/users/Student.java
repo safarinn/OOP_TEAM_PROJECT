@@ -8,6 +8,8 @@ import university.model.academic.Course;
 import university.model.academic.TeacherRating;
 import university.model.research.Researcher;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class Student extends User {
 
@@ -17,6 +19,7 @@ public class Student extends User {
     private int credits;   // <= 21
     private int fails;     // <= 3
     private Researcher supervisor; // [0..1]
+    private List<Course> registeredCourses = new ArrayList<>();
 
     public Student(String id, String login, String password, String name, String email,
                    int year, String major) {
@@ -29,9 +32,14 @@ public class Student extends User {
     }
 
     public void registerCourse(Course c) throws CreditLimitException {
-        if(c.getCredits() + credits > 21) throw new CreditLimitException(email + " Превысил лиимт кредитов");
+        if(c.getCredits() + credits > 21) throw new CreditLimitException(email + " Превысил лимит кредитов");
         c.addStudent(this);
         this.credits += c.getCredits();
+        registeredCourses.add(c);
+    }
+
+    public List<Course> getRegisteredCourses() {
+        return registeredCourses;
     }
 
     public void rateTeacher(Teacher t, int score) {

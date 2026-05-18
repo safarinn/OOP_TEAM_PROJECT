@@ -24,7 +24,6 @@ public class Course implements Serializable{
         this.name = name;
         this.credits = credits;
         this.maxStudents = maxStudents;
-        throw new UnsupportedOperationException(" реализовать конструктор Course");
     }
 
     public void addInstructor(Teacher t) {

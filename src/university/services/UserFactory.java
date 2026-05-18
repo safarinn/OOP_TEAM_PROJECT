@@ -80,6 +80,7 @@ public class UserFactory {
             case TEACHER:  return createTeacher(id, login, password, name, email, new Date(), 0, TeacherTitle.LECTOR, "General");
             case ADMIN:    return createAdmin(id, login, password, name, email, new AuthenticationService());
             case MANAGER:  return createManager(id, login, password, name, email, ManagerType.values()[0]);
+            case EMPLOYEE: return new Employee(id, login, password, name, email, UserRole.EMPLOYEE, new Date(), 0);
             default:       throw new IllegalArgumentException("Неизвестная роль: " + role);
         }
     }

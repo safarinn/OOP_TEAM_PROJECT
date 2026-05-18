@@ -15,7 +15,7 @@ public abstract class ResearcherDecorator implements Researcher {
 
     public ResearcherDecorator(User user) {
         this.user = user;
-        this.hindex = hindex;
+        this.hindex = 0;
         this.papers = new ArrayList<>();
         this.projects = new ArrayList<>();
     }
