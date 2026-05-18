@@ -1,11 +1,14 @@
 package university.model.research;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 
-public class ResearchPaper implements Comparable<ResearchPaper> {
+public class ResearchPaper implements Comparable<ResearchPaper>, Serializable {
+
+    private static final long serialVersionUID = 301L;
 
     private String title;
     private List<String> authors;

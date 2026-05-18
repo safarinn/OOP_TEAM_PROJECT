@@ -9,6 +9,8 @@ import java.util.List;
 
 public class Admin extends User {
 
+    private static final long serialVersionUID = 101L;
+
     private AuthenticationService authService;
     private List<Log> logs = new ArrayList<>();
 

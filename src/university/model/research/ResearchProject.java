@@ -2,13 +2,15 @@ package university.model.research;
 
 import university.exceptions.NotResearcherException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
+public class ResearchProject implements Serializable {
 
-public class ResearchProject {
+    private static final long serialVersionUID = 302L;
 
     private String id;
     private String topic;

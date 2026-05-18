@@ -3,6 +3,7 @@ package university.services;
 import university.exceptions.AuthenticationException;
 import university.model.users.User;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,9 +26,11 @@ import java.util.Map;
  *  8. getUsers() — вернуть всю Map<String, User>
  * ============================================================
  */
-public class AuthenticationService {
+public class AuthenticationService implements Serializable {
 
-    private User currentUser;
+    private static final long serialVersionUID = 406L;
+
+    private transient User currentUser;
     private Map<String, User> users;
 
     public AuthenticationService() {

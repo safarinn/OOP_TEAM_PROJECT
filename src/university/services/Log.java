@@ -2,6 +2,7 @@ package university.services;
 
 import university.model.users.User;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +15,9 @@ import java.util.Date;
  *  3. toString() — читаемый вывод: "[timestamp] user.getName() → action"
  * ============================================================
  */
-public class Log {
+public class Log implements Serializable {
+
+    private static final long serialVersionUID = 403L;
 
     private User user;
     private String action;

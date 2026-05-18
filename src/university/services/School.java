@@ -2,8 +2,9 @@ package university.services;
 
 import university.model.users.User;
 
-import java.util.List;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ============================================================
@@ -16,7 +17,9 @@ import java.util.ArrayList;
  *  4. Геттеры getName(), getMembers()
  * ============================================================
  */
-public class School {
+public class School implements Serializable {
+
+    private static final long serialVersionUID = 402L;
 
     private String name;
     private List<User> members;

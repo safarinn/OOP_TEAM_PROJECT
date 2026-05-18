@@ -14,6 +14,8 @@ import java.util.List;
 
 public class Student extends User implements Comparable<Student> {
 
+    private static final long serialVersionUID = 103L;
+
     private int year;
     private String major;
     private double gpa;

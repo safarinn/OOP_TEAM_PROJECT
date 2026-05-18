@@ -12,6 +12,8 @@ import java.util.List;
 
 public class Teacher extends Employee {
 
+    private static final long serialVersionUID = 104L;
+
     private TeacherTitle title;
     private String department;
     private List<Course> courses = new ArrayList<>();

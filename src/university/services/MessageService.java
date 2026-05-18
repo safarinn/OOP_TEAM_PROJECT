@@ -2,6 +2,7 @@ package university.services;
 
 import university.model.users.Employee;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,9 @@ import java.util.List;
  *  5. getSubscribers() — геттер
  * ============================================================
  */
-public class MessageService {
+public class MessageService implements Serializable {
+
+    private static final long serialVersionUID = 405L;
 
     private List<Employee> subscribers;
     private List<Message> history;

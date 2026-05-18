@@ -15,6 +15,8 @@ import java.util.List;
 
 public class Manager extends User {
 
+    private static final long serialVersionUID = 102L;
+
     private ManagerType type;
     private List<Course> courses = new ArrayList<>();
     private List<News> newsList = new ArrayList<>();

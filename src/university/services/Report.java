@@ -1,5 +1,6 @@
 package university.services;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +14,9 @@ import java.util.Date;
  *  3. Геттеры getName(), getGeneratedAt()
  * ============================================================
  */
-public class Report {
+public class Report implements Serializable {
+
+    private static final long serialVersionUID = 407L;
 
     private String name;
     private Date generatedAt;

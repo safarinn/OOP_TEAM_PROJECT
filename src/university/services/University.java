@@ -3,11 +3,11 @@ package university.services;
 import university.model.research.ResearchPaper;
 import university.model.research.Researcher;
 
-
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * ============================================================
@@ -27,7 +27,9 @@ import java.util.ArrayList;
  *     отсортированные по comparator
  * ============================================================
  */
-public class University {
+public class University implements Serializable {
+
+    private static final long serialVersionUID = 401L;
 
     private List<School> schools;
     private List<Researcher> researchers;

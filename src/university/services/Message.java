@@ -2,6 +2,7 @@ package university.services;
 
 import university.model.users.Employee;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +15,9 @@ import java.util.Date;
  *  3. toString() — читаемый вывод: "От: X → Кому: Y | Тема: subject"
  * ============================================================
  */
-public class Message {
+public class Message implements Serializable {
+
+    private static final long serialVersionUID = 404L;
 
     private Employee from;
     private Employee to;
