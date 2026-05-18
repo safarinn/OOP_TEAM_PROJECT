@@ -103,4 +103,30 @@ public class Schedule implements Serializable {
 
     public String getSemester()        { return semester; }
     public List<Lesson> getLessons()   { return lessons; }
+
+    @Override
+    public String toString() {
+        String line = "+---------+----------------------+----------+------+----------+";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Расписание: ").append(semester).append("\n");
+        sb.append(line).append("\n");
+        sb.append(String.format("| %-7s | %-20s | %-8s | %-4s | %-8s |%n",
+                "ID", "Тема", "Тип", "Ауд.", "Время"));
+        sb.append(line).append("\n");
+        if (lessons.isEmpty()) {
+            sb.append("| Занятий нет                                               |\n");
+        } else {
+            for (Lesson l : lessons) {
+                String room = l.getRoom() != null ? l.getRoom().getNumber() : "-";
+                String time = l.getTime() != null
+                        ? String.format("%tH:%tM", l.getTime(), l.getTime()) : "-";
+                String topic = l.getTopic().length() > 20
+                        ? l.getTopic().substring(0, 17) + "..." : l.getTopic();
+                sb.append(String.format("| %-7s | %-20s | %-8s | %-4s | %-8s |%n",
+                        l.getId(), topic, l.getType(), room, time));
+            }
+        }
+        sb.append(line);
+        return sb.toString();
+    }
 }

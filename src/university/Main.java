@@ -305,12 +305,10 @@ public class Main {
             oop.addLesson(lesson2);
 
             Schedule forStudent = schedule.forStudent(student1);
-            System.out.println("Занятий у " + student1.getName() + ": " +
-                    forStudent.getLessons().size());
+            System.out.println(forStudent);
 
             Schedule forTeacher = schedule.forTeacher(teacher);
-            System.out.println("Занятий у " + teacher.getName() + ": " +
-                    forTeacher.getLessons().size());
+            System.out.println(forTeacher);
 
         } catch (RoomBookedException e) {
             System.out.println("Конфликт расписания: " + e.getMessage());
