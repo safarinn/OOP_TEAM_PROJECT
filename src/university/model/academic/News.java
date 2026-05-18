@@ -1,7 +1,7 @@
 package university.model.academic;
 
 import university.model.users.Manager;
-
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +14,9 @@ import java.util.Date;
  *  3. Геттеры для author и date
  * ============================================================
  */
-public class News {
+public class News implements Serializable {
+
+    private static final long serialVersionUID = 213L;
 
     private String title;
     private String body;
@@ -22,8 +24,10 @@ public class News {
     private Date date;
 
     public News(String title, String body, Manager author) {
-        // TODO [Нур]: инициализировать title, body, author; date = new Date()
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать конструктор News");
+        this.title = title;
+        this.body = body;
+        this.author = author;
+        this.date = new Date();
     }
 
     public String getTitle()       { return title; }
@@ -31,11 +35,9 @@ public class News {
     public Manager getAuthor()     { return author; }
     public Date getDate()          { return date; }
     public void setTitle(String t) {
-        // TODO [Нур]: установить title
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать setTitle()");
+        this.title = t;
     }
     public void setBody(String b)  {
-        // TODO [Нур]: установить body
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать setBody()");
+        this.body = b;
     }
 }

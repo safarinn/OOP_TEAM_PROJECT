@@ -2,8 +2,10 @@ package university.model.academic;
 
 import university.enums.RoomType;
 import university.exceptions.RoomBookedException;
-
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * ============================================================
@@ -17,28 +19,43 @@ import java.util.Date;
  *     если уже занята — бросить RoomBookedException
  * ============================================================
  */
-public class Room {
+public class Room implements Serializable {
+
+    private static final long serialVersionUID = 204L;
 
     private String number;
     private RoomType type;
     private int capacity;
+    private List<Lesson> bookedLessons = new ArrayList<>();
+
 
     public Room(String number, RoomType type, int capacity) {
-        // TODO [Нур]: инициализировать поля
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать конструктор Room");
+        this.number = number;
+        this.type = type;
+        this.capacity = capacity;
     }
 
     public boolean isFree(Date time) {
-        // TODO [Нур]: проверить нет ли урока в это время в этой аудитории
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать isFree()");
+        if (time == null) return true;
+        for (Lesson l : bookedLessons) {
+            if (l.getTime() != null && l.getTime().equals(time)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void book(Lesson lesson) throws RoomBookedException {
-        // TODO [Нур]: если isFree(lesson.getTime()) — забронировать, иначе RoomBookedException
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать book()");
+       if (lesson == null) return;
+        if (!isFree(lesson.getTime())) {
+            throw new RoomBookedException("Room " + number + " is already booked for " + lesson.getTime());
+        }
+        bookedLessons.add(lesson);
     }
 
     public String getNumber()  { return number; }
     public RoomType getType()  { return type; }
     public int getCapacity()   { return capacity; }
+    public List<Lesson> getBookedLessons() { return bookedLessons; }
 }
+

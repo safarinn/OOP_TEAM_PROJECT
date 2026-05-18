@@ -1,7 +1,7 @@
 package university.model.academic;
 
 import university.model.users.Student;
-
+import java.io.Serializable;
 /**
  * ============================================================
  * TODO [Нур]: Реализовать класс Mark
@@ -15,7 +15,9 @@ import university.model.users.Student;
  * Диапазоны: attestation1 и attestation2 от 0 до 30, finalExam от 0 до 40
  * ============================================================
  */
-public class Mark {
+public class Mark implements Serializable {
+
+    private static final long serialVersionUID = 212L;
 
     private double attestation1;
     private double attestation2;
@@ -25,13 +27,15 @@ public class Mark {
 
     public Mark(double attestation1, double attestation2, double finalExam,
                 Student student, Course course) {
-        // TODO [Нур]: инициализировать поля
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать конструктор Mark");
+        this.attestation1 = attestation1;
+        this.attestation2 = attestation2;
+        this.finalExam = finalExam;
+        this.student = student;
+        this.course = course;
     }
 
     public double getTotal() {
-        // TODO [Нур]: вернуть attestation1 + attestation2 + finalExam
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать getTotal()");
+        return attestation1 + attestation2 + finalExam;
     }
 
     public double getAttestation1() { return attestation1; }

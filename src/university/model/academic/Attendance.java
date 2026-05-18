@@ -2,6 +2,7 @@ package university.model.academic;
 
 import university.model.users.Student;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +15,8 @@ import java.util.Date;
  *  3. mark(present) — отметить присутствие/отсутствие студента
  * ============================================================
  */
-public class Attendance {
+public class Attendance implements Serializable {
+    private static final long serialVersionUID = 206L;
 
     private Student student;
     private Lesson lesson;
@@ -22,13 +24,15 @@ public class Attendance {
     private Date date;
 
     public Attendance(Student student, Lesson lesson, boolean present) {
-        // TODO [Нур]: инициализировать поля; date = new Date()
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать конструктор Attendance");
+        this.student = student;
+        this.lesson = lesson;
+        this.present = present;
+        this.date = new Date();
     }
 
     public void mark(boolean present) {
-        // TODO [Нур]: установить present
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать mark()");
+        this.present = present;
+        this.date = new Date();
     }
 
     public Student getStudent() { return student; }

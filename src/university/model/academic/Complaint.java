@@ -3,6 +3,7 @@ package university.model.academic;
 import university.model.users.Employee;
 
 import java.util.Date;
+import java.io.Serializable;
 
 /**
  * ============================================================
@@ -12,16 +13,20 @@ import java.util.Date;
  *  1. Конструктор — инициализировать from, text, date
  *  2. Геттеры для всех полей
  * ============================================================
- */
-public class Complaint {
+ */ 
+public class Complaint implements Serializable {
+
+    private static final long serialVersionUID = 209L;
 
     private Employee from;
     private String text;
     private Date date;
 
     public Complaint(Employee from, String text) {
-        // TODO [Нур]: инициализировать from, text; date = new Date() (текущее время)
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать конструктор Complaint");
+        this.from = from;
+        this.text = text;
+        this.date = new Date();
+        
     }
 
     public Employee getFrom() { return from; }

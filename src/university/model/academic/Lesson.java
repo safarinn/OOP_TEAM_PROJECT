@@ -1,7 +1,7 @@
 package university.model.academic;
 
 import university.enums.LessonType;
-
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +14,9 @@ import java.util.Date;
  *  3. Геттеры для всех полей: getId(), getTopic(), getRoom(), getTime()
  * ============================================================
  */
-public class Lesson {
+public class Lesson implements Serializable {
+
+    private static final long serialVersionUID = 211L;
 
     private String id;
     private LessonType type;
@@ -23,13 +25,15 @@ public class Lesson {
     private Date time;
 
     public Lesson(String id, LessonType type, String topic, Room room, Date time) {
-        // TODO [Нур]: инициализировать поля
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать конструктор Lesson");
+        this.id = id;
+        this.type = type;
+        this.topic = topic;
+        this.room = room;
+        this.time = time;
     }
 
     public LessonType getType() {
-        // TODO [Нур]: вернуть type
-        throw new UnsupportedOperationException("TODO [Нур]: реализовать getType()");
+        return type;
     }
 
     public String getId()   { return id; }
