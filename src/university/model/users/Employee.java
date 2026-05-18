@@ -2,6 +2,8 @@ package university.model.users;
 
 import university.enums.UserRole;
 import university.model.academic.Complaint;
+import university.services.Message;
+import university.services.MessageService;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +35,16 @@ public class Employee extends User {
         complaints.add(c);
     }
 
+    public void sendMessage(MessageService ms, Message m) {
+        ms.send(m);
+    }
+
     public List<Complaint> getComplaints() {
         return complaints;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{name='" + name + "', salary=" + salary + "}";
     }
 }

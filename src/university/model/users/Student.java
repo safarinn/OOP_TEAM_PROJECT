@@ -5,13 +5,14 @@ import university.exceptions.CreditLimitException;
 import university.exceptions.LowHIndexException;
 import university.exceptions.MaxFailsException;
 import university.model.academic.Course;
+import university.model.academic.Mark;
 import university.model.academic.TeacherRating;
 import university.model.research.Researcher;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Student extends User {
+public class Student extends User implements Comparable<Student> {
 
     private int year;
     private String major;
@@ -20,6 +21,7 @@ public class Student extends User {
     private int fails;     // <= 3
     private Researcher supervisor; // [0..1]
     private List<Course> registeredCourses = new ArrayList<>();
+    private List<Mark> marks = new ArrayList<>();
 
     public Student(String id, String login, String password, String name, String email,
                    int year, String major) {
@@ -60,6 +62,39 @@ public class Student extends User {
         return supervisor;
     }
 
+    public void addMark(Mark m) {
+        marks.add(m);
+    }
+
+    public List<Mark> viewMarks() {
+        return marks;
+    }
+
+    public String getTranscript() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== TRANSCRIPT ===\n");
+        sb.append("Name:    ").append(name).append("\n");
+        sb.append("Major:   ").append(major).append("\n");
+        sb.append("Year:    ").append(year).append("\n");
+        sb.append("GPA:     ").append(gpa).append("\n");
+        sb.append("Credits: ").append(credits).append("\n");
+        sb.append("Marks:\n");
+        for (Mark m : marks) {
+            sb.append("  ").append(m.getCourse().getName())
+              .append(" → ").append(m.getTotal()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    public List<Teacher> getTeacherInfo(Course c) {
+        return c.getInstructors();
+    }
+
+    @Override
+    public int compareTo(Student o) {
+        return this.name.compareTo(o.name);
+    }
+
     public int getYear()     { return year; }
     public String getMajor() { return major; }
     public double getGpa()   { return gpa; }
@@ -68,5 +103,12 @@ public class Student extends User {
 
     public void setGpa(double gpa) {
         this.gpa = gpa;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{name='" + name + "', major='" + major +
+               "', year=" + year + ", gpa=" + gpa +
+               ", credits=" + credits + ", fails=" + fails + "}";
     }
 }

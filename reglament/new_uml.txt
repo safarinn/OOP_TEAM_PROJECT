@@ -26,6 +26,7 @@
   + logout(): void
   + equals(o): boolean
   + hashCode(): int
+  + toString(): String
 
 class Admin extends User
   + addUser(u: User)
@@ -40,58 +41,131 @@ class Manager extends User
   + assignTeacher(c: Course, t: Teacher)
   + generateReports()
   + manageNews(n: News)
+  + viewComplaints(employees: List<Employee>): List<Complaint>
+  + viewStudentsSortedByGpa(students: List<Student>): List<Student>
+  + viewStudentsSortedByName(students: List<Student>): List<Student>
+  + viewTeachersSortedByName(teachers: List<Teacher>): List<Teacher>
+  + toString(): String
 
 class Employee extends User
   - hireDate: Date
   - salary: double
   + getSalary(): double
   + sendComplaint(c: Complaint)
+  + sendMessage(ms: MessageService, m: Message)
+  + getComplaints(): List<Complaint>
+  + toString(): String
 
-class Student extends User
+class Student extends User implements Comparable<Student>
   - year: int
   - major: String
   - gpa: double
   - credits: int                  (≤ 21)
   - fails: int                    (≤ 3)
   - supervisor: Researcher [0..1]
-  + registerCourse(c: Course)
+  - registeredCourses: List<Course>
+  - marks: List<Mark>
+  + registerCourse(c: Course)     throws CreditLimitException
   + rateTeacher(t: Teacher, score: int)
+  + incrementFails()              throws MaxFailsException
+  + setSupervisor(r: Researcher)  throws LowHIndexException
+  + addMark(m: Mark)
+  + viewMarks(): List<Mark>
+  + getTranscript(): String
+  + getTeacherInfo(c: Course): List<Teacher>
+  + compareTo(o: Student): int    (по имени, алфавитно)
+  + toString(): String
 
 class Teacher extends Employee
   - title: TeacherTitle
   - department: String
-  + viewCourses()
+  + viewCourses(): List<Course>
+  + getAssignedCourses(): List<Course>
   + manageCourse(c: Course)
   + putMark(s: Student, c: Course, m: Mark)
-  + viewStudents(c: Course)
+  + viewStudents(c: Course): List<Student>
+  + addCourse(c: Course)
+  + addRating(r: TeacherRating)
+  + getRatings(): List<TeacherRating>
+  + toString(): String
 
 ======================================================================
 2. УЧЕБНАЯ ПОДСИСТЕМА
 ======================================================================
 
-class Course
+class Course implements Serializable
   - code: String
   - name: String
   - credits: int
   - maxStudents: int
+  - instructors: List<Teacher>
+  - students: List<Student>
+  - lessons: List<Lesson>
   + addInstructor(t: Teacher)
   + addStudent(s: Student)
+  + addLesson(l: Lesson)
+  + getCode(): String
+  + getName(): String
+  + getCredits(): int
+  + getMaxStudents(): int
+  + getInstructors(): List<Teacher>
+  + getStudents(): List<Student>
+  + getLessons(): List<Lesson>
+  + toString(): String
 
-class Lesson
+class Lesson implements Serializable
   - id: String
   - type: LessonType
   - topic: String
-  - time: DateTime
+  - room: Room
+  - time: Date
   + getType(): LessonType
+  + getId(): String
+  + getTopic(): String
   + getRoom(): Room
+  + getTime(): Date
 
-class Mark
+class Mark implements Serializable
   - attestation1: double
   - attestation2: double
   - finalExam: double
   - student: Student
   - course: Course
-  + getTotal(): double
+  + getTotal(): double            (att1 + att2 + final)
+  + getAttestation1(): double
+  + getAttestation2(): double
+  + getFinalExam(): double
+  + getStudent(): Student
+  + getCourse(): Course
+
+class TeacherRating implements Serializable
+  - teacher: Teacher
+  - student: Student
+  - score: int                    (1..5)
+  + getTeacher(): Teacher
+  + getStudent(): Student
+  + getScore(): int
+  + getAverageRating(teacher, ratings): double  [static]
+
+class Complaint implements Serializable
+  - from: Employee
+  - text: String
+  - date: Date
+  + getFrom(): Employee
+  + getText(): String
+  + getDate(): Date
+
+class News implements Serializable
+  - title: String
+  - body: String
+  - author: Manager
+  - date: Date
+  + getTitle(): String
+  + getBody(): String
+  + getAuthor(): Manager
+  + getDate(): Date
+  + setTitle(t: String)
+  + setBody(b: String)
 
 ======================================================================
 3. ИССЛЕДОВАТЕЛЬСКАЯ ПОДСИСТЕМА (Decorator)
@@ -110,13 +184,24 @@ class Mark
   # hindex: int
   # papers: List<ResearchPaper>
   # projects: List<ResearchProject>
-  + printPapers(c)
+  + getHIndex(): int
+  + addPaper(p: ResearchPaper)
+  + addProject(p: ResearchProject)
+  + printPapers(c: Comparator<ResearchPaper>)
+  + getPapers(): List<ResearchPaper>
+  + getProjects(): List<ResearchProject>
+  + getUser(): User
+  # calculateHIndex(): int
 
 class StudentResearcher extends ResearcherDecorator
   + supervisorTeacher: Teacher
+  + getSupervisorTeacher(): Teacher
+  + setSupervisorTeacher(t: Teacher)
 
 class EmployeeResearcher extends ResearcherDecorator
-  + supervisees: List<Student>
+  - supervisees: List<Student>
+  + addSupervisee(s: Student)
+  + getSupervisees(): List<Student>
 
 class ResearchPaper implements Comparable<ResearchPaper>
   - title: String
@@ -127,14 +212,31 @@ class ResearchPaper implements Comparable<ResearchPaper>
   - citations: int
   - doi: String
   + compareTo(o): int
+  + addCitation()
+  + getTitle(): String
+  + getAuthors(): List<String>
+  + getJournal(): String
+  + getPages(): String
+  + getPublishDate(): Date
+  + getCitations(): int
+  + getDoi(): String
+  + toString(): String
 
 class ResearchProject
   - id: String
   - topic: String
-  - startDate, endDate: Date
-  + addParticipant(r: Researcher)
-       throws NotResearcherException
+  - startDate: Date
+  - endDate: Date
+  - participants: List<Researcher>
+  - papers: List<ResearchPaper>
+  + addParticipant(r: Researcher)  throws NotResearcherException
   + addPaper(p: ResearchPaper)
+  + getId(): String
+  + getTopic(): String
+  + getStartDate(): Date
+  + getEndDate(): Date
+  + getParticipants(): List<Researcher>
+  + getPapers(): List<ResearchPaper>
 
 «Strategy» Comparator<ResearchPaper>
   Реализации: ByCitationsComp, ByDateComparator, ByPagesComp
@@ -147,66 +249,87 @@ class ResearchProject
 «Facade» class University
   - schools: List<School>
   - researchers: List<Researcher>
-  + topCitedOfSchool(s): Researcher
-  + topCitedOfYear(y): Researcher
-  + printAllPapers(c: Comparator)
+  + addSchool(s: School)
+  + addResearcher(r: Researcher)
+  + topCitedOfSchool(s: School): Researcher
+  + topCitedOfYear(year: int): Researcher
+  + printAllPapers(c: Comparator<ResearchPaper>)
+  + getSchools(): List<School>
+  + getResearchers(): List<Researcher>
 
 «Singleton» class DataManager
-  - instance: DataManager
+  - instance: DataManager  [static]
   - file: String
-  + getInstance(): DataManager
+  + getInstance(): DataManager  [static]
   + save(o: Object): void
   + load(): Object
+  + getFile(): String
 
 «Factory» class UserFactory
-  + create(role: UserRole, data): User
-  + createTeacher(...): Teacher
+  - university: University
   + createStudent(...): Student
-  + wrapAsResearcher(u): Researcher
+  + createTeacher(...): Teacher
+  + createAdmin(...): Admin
+  + createManager(...): Manager
+  + wrapAsResearcher(u: User): Researcher
+  + create(role: UserRole, ...): User
 
 class AuthenticationService
   - currentUser: User
   - users: Map<String, User>
-  + login(login, pw): User
+  + login(login, pw): User         throws AuthenticationException
   + logout(): void
   + registerUser(u: User): void
   + removeUser(id: String): void
   + updateUser(u: User): void
   + getUsers(): Map<String, User>
+  + getCurrentUser(): User
 
 «Observer» class MessageService
   - subscribers: List<Employee>
+  - history: List<Message>
   + send(m: Message)
   + subscribe(e: Employee)
+  + unsubscribe(e: Employee)
+  + getSubscribers(): List<Employee>
+  + getHistory(): List<Message>
 
 class Message
-  - from, to: Employee
-  - subject, body: String
+  - from: Employee
+  - to: Employee
+  - subject: String
+  - body: String
   - date: Date
+  + getFrom(): Employee
+  + getTo(): Employee
+  + getSubject(): String
+  + getBody(): String
+  + getDate(): Date
+  + toString(): String
 
 class Report
   - name: String
   - generatedAt: Date
   + generate(): void
+  + getName(): String
+  + getGeneratedAt(): Date
 
 class School
   - name: String
   - members: List<User>
+  + addMember(u: User)
+  + removeMember(u: User)
+  + getName(): String
+  + getMembers(): List<User>
 
 class Log
   - user: User
   - action: String
   - timestamp: Date
-
-class Complaint
-  - from: Employee
-  - text: String
-  - date: Date
-
-class TeacherRating
-  - teacher: Teacher
-  - student: Student
-  - score: int (1..5)
+  + getUser(): User
+  + getAction(): String
+  + getTimestamp(): Date
+  + toString(): String
 
 ======================================================================
 5. BONUS ПОДСИСТЕМА
@@ -215,17 +338,25 @@ class TeacherRating
 class Schedule              «bonus»
   - semester: String
   - lessons: List<Lesson>
-  + generate() throws RoomBookedException
-  + checkConflicts()
+  + generate()
+  + checkConflicts()              throws RoomBookedException
+  + addLesson(l: Lesson)          throws RoomBookedException
   + forStudent(s: Student): Schedule
   + forTeacher(t: Teacher): Schedule
+  + getSemester(): String
+  + getLessons(): List<Lesson>
 
 class Room                  «bonus»
   - number: String
   - type: RoomType
   - capacity: int
-  + isFree(time: DateTime): boolean
-  + book(lesson: Lesson)
+  - bookedLessons: List<Lesson>
+  + isFree(time: Date): boolean
+  + book(lesson: Lesson)          throws RoomBookedException
+  + getNumber(): String
+  + getType(): RoomType
+  + getCapacity(): int
+  + getBookedLessons(): List<Lesson>
 
 class Attendance            «bonus»  (ассоциативный класс)
   - student: Student
@@ -233,12 +364,13 @@ class Attendance            «bonus»  (ассоциативный класс)
   - present: boolean
   - date: Date
   + mark(present: boolean)
+  + getStudent(): Student
+  + getLesson(): Lesson
+  + isPresent(): boolean
+  + getDate(): Date
 
 class News                  «bonus»
-  - title: String
-  - body: String
-  - author: Manager
-  - date: Date
+  → см. раздел 2 (Учебная подсистема)
 
 ======================================================================
 6. ПЕРЕЧИСЛЕНИЯ
@@ -288,6 +420,7 @@ RoomBookedException       — аудитория уже занята в это �
 
   ResearcherDecorator ┄┄▷ Researcher
   ResearchPaper       ┄┄▷ Comparable<ResearchPaper>
+  Student             ┄┄▷ Comparable<Student>
   ByCitationsComp     ┄┄▷ Comparator<ResearchPaper>
   ByDateComparator    ┄┄▷ Comparator<ResearchPaper>
   ByPagesComp         ┄┄▷ Comparator<ResearchPaper>
@@ -321,6 +454,8 @@ RoomBookedException       — аудитория уже занята в это �
   Course           ── Student           [0..*]       (enrolled, ≤ maxStudents)
   Mark             ── Student [1] + Course [1]       (оценка студента по курсу)
   Student          ── Researcher [0..1]              (supervisor, 4 курс)
+  Student          ── Course [0..*]                  (registeredCourses)
+  Student          ── Mark [0..*]                    (marks)
   ResearchProject  ── Researcher [1..*]              (participants)
   ResearcherDecorator ── User [1]                    (оборачиваемый)
   Lesson           ── Room [1]                       (где проходит урок)
@@ -338,6 +473,8 @@ RoomBookedException       — аудитория уже занята в это �
   AuthenticationService  ┄┄> User
   UserFactory            ┄┄> User, Researcher, ResearcherDecorator
   MessageService         ┄┄> Message, Employee
+  Employee               ┄┄> MessageService, Message   (sendMessage)
+  Manager                ┄┄> Employee, Student, Teacher (сортировки, жалобы)
   University             ┄┄> Researcher, ResearchPaper, Comparator
   DataManager            ┄┄> University  (сериализация всей системы)
   Manager                ┄┄> Report, News
@@ -393,3 +530,42 @@ RoomBookedException       — аудитория уже занята в это �
                                       → RoomBookedException
   • Lesson.type = LECTURE → Room.type = LECTURE_HALL (для расписания)
   • Lesson.type = PRACTICE → Room.type ∈ {LAB, CLASSROOM}
+  • TeacherRating.score ∈ [1..5]      → IllegalArgumentException
+  • Student.compareTo() — по имени (алфавитно)
+  • ResearchPaper.compareTo() — по цитированиям (убывание)
+
+======================================================================
+11. ИЗМЕНЕНИЯ (v2 — актуальная версия)
+======================================================================
+
+  Добавлено в Student:
+    + implements Comparable<Student>  (по имени)
+    + registeredCourses: List<Course>
+    + marks: List<Mark>
+    + addMark(), viewMarks(), getTranscript(), getTeacherInfo(), toString()
+
+  Добавлено в Teacher:
+    + getAssignedCourses()            (алиас viewCourses для Schedule)
+    + putMark() теперь вызывает s.addMark(m)
+    + toString()
+
+  Добавлено в Employee:
+    + sendMessage(ms: MessageService, m: Message)
+    + toString()
+
+  Добавлено в Manager:
+    + viewComplaints(List<Employee>): List<Complaint>
+    + viewStudentsSortedByGpa(List<Student>): List<Student>
+    + viewStudentsSortedByName(List<Student>): List<Student>
+    + viewTeachersSortedByName(List<Teacher>): List<Teacher>
+    + toString()
+
+  Добавлено в Course:
+    + toString()
+
+  Исправленные баги:
+    - Course конструктор: убран throw UnsupportedOperationException
+    - MessageService.getHistory: исправлен синтаксис (отсутствовали ())
+    - ResearcherDecorator: this.hindex = hindex → this.hindex = 0
+    - UserFactory.create(): добавлен case EMPLOYEE
+    - ResearchPaper.toString(): Date.getYear() → Calendar.get(YEAR)

@@ -42,6 +42,7 @@ public class Teacher extends Employee {
 
     public void putMark(Student s, Course c, Mark m) {
         marks.add(m);
+        s.addMark(m);
     }
 
     public List<Student> viewStudents(Course c) {
@@ -59,4 +60,10 @@ public class Teacher extends Employee {
 
     public List<TeacherRating> getRatings() { return ratings; }
     public List<Mark> getMarks()            { return marks; }
+
+    @Override
+    public String toString() {
+        return "Teacher{name='" + name + "', title=" + title +
+               ", department='" + department + "'}";
+    }
 }

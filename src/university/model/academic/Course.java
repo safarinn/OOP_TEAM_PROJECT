@@ -83,5 +83,12 @@ public class Course implements Serializable{
     public List<Lesson> getLessons() {
         return lessons;
     }
+
+    @Override
+    public String toString() {
+        return "Course{code='" + code + "', name='" + name +
+               "', credits=" + credits + ", students=" + students.size() +
+               "/" + maxStudents + "}";
+    }
 }
 
